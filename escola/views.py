@@ -3,10 +3,12 @@ from rest_framework import viewsets, generics
 from escola.serializers import EstudanteSerializer, CursoSerializer, MatriculaSerializer, ListaMatriculasEstudanteSerializer, ListaMatriculasCursoSerializer 
 
 class EstudanteViewSet(viewsets.ModelViewSet):
+    
     queryset = Estudante.objects.all()
     serializer_class = EstudanteSerializer  
 
 class CursoViewSet(viewsets.ModelViewSet):
+    
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
 
