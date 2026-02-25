@@ -38,9 +38,21 @@ class MatriculaSerializer(serializers.ModelSerializer):
         model = Matricula
         exclude = []
 
+
 class ListaMatriculasEstudanteSerializer(serializers.ModelSerializer):
-    # curso = serializers.CharField(source='curso.descricao')
-    # periodo = serializers.CharField(source='get_periodo_display')
+    """
+    Serializer para listar as matrículas de um estudante com informações de curso e período.
+    Este serializer fornece uma representação somente leitura das matrículas do estudante,
+    exibindo a descrição do curso e o valor legível do período.
+    Attributes:
+        curso (ReadOnlyField): A descrição do curso obtida do objeto relacionado Curso.
+        periodo (SerializerMethodField): A representação legível do período da matrícula.
+    Methods:
+        get_periodo(obj): Retorna o valor exibível do campo de escolha período.
+    Meta:
+        model (Matricula): O modelo Matricula a ser serializado.
+        fields (list): Os campos a incluir na serialização: 'curso' e 'periodo'.
+    """
     curso = serializers.ReadOnlyField(source='curso.descricao')
     periodo = serializers.SerializerMethodField()
 
@@ -49,10 +61,35 @@ class ListaMatriculasEstudanteSerializer(serializers.ModelSerializer):
         fields = ['curso', 'periodo']
 
     def get_periodo(self, obj):
+        """
+        Recupera a representação legível do campo período.
+        
+        Este método obtém o valor de exibição do campo de escolha período
+        do objeto fornecido, convertendo o valor armazenado para seu
+        rótulo correspondente.
+        
+        Args:
+            obj: A instância do modelo contendo o campo período.
+        
+        Returns:
+            str: O nome de exibição legível da escolha de período.
+        """
         return obj.get_periodo_display()
     
 #Listar as matriculas de um curso, mostrando o nome do estudante e o período da matrícula
 class ListaMatriculasCursoSerializer(serializers.ModelSerializer):
+    """
+    Serializer para listar as matrículas de um curso.
+    Este serializer fornece uma representação somente leitura das matrículas,
+    exibindo apenas o nome do estudante matriculado.
+    Attributes:
+        estudante_nome (ReadOnlyField): O nome do estudante associado
+            à matrícula, obtido do objeto relacionado estudante.
+    Meta:
+        model (Matricula): O modelo Matricula a ser serializado.
+        fields (list): Campos a incluir na saída da serialização.
+            - estudante_nome: Nome do estudante do objeto relacionado estudante.
+    """
     estudante_nome = serializers.ReadOnlyField(source='estudante.nome')
 
     class Meta:
