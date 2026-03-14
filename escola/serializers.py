@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from escola.models import Estudante, Curso, Matricula
+from escola.validators import cpf_invalido, nome_invalido, celular_invalido
 """
 Serializer para listar as matrículas de um curso.
 Este serializer é utilizado para serializar dados de matrícula, exibindo
@@ -18,13 +20,23 @@ Note:
     'estudante.nome', mas o campo em `fields` referencia 'estudante_nome'.
     Considere alinhar os nomes para evitar erros de serialização.
 """
-from escola.models import Estudante, Curso, Matricula
 
 class EstudanteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Estudante
         fields = ['id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular']
+
+    def validate(self, data):
+        if cpf_invalido(data['cpf']):
+            raise serializers.ValidationError({"cpf": "O CPF deve conter exatamente 11 caracteres."})
+        
+        if nome_invalido(data['nome']):
+            raise serializers.ValidationError({"nome": "O nome deve conter apenas letras."})
+        
+        if celular_invalido(data['celular']):
+            raise serializers.ValidationError({"celular": "O número de celular deve conter no máximo 13 caracteres."})
+        return data
 
 class CursoSerializer(serializers.ModelSerializer):
 
