@@ -1,8 +1,10 @@
 asgiref==3.11.1
 Django==6.0.2
 django-cors-headers==4.9.0
+django-filter==25.2
 djangorestframework==3.16.1
 drf-yasg==1.21.15
+Faker==40.11.0
 inflection==0.5.1
 Markdown==3.10.2
 packaging==26.0

@@ -1,8 +1,9 @@
 from escola.models import Estudante, Curso, Matricula
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
 from escola.serializers import EstudanteSerializer, CursoSerializer, MatriculaSerializer, ListaMatriculasEstudanteSerializer, ListaMatriculasCursoSerializer 
 from escola.throttles import AnonRateThrottleCustom
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 class EstudanteViewSet(viewsets.ModelViewSet):
     """
@@ -25,7 +26,11 @@ class EstudanteViewSet(viewsets.ModelViewSet):
     """
     
     queryset = Estudante.objects.all().order_by('id')
-    serializer_class = EstudanteSerializer  
+    serializer_class = EstudanteSerializer 
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
+    ordering_fields = ['nome'] 
+    search_fields = ['nome', 'cpf']
+
 
 class CursoViewSet(viewsets.ModelViewSet):
     """
